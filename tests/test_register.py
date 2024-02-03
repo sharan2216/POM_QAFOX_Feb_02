@@ -7,11 +7,18 @@ from selenium.webdriver.common.by import By
 
 
 # @pytest.mark.usefixtures("setup_and_teardown")
-def test_register_with_mandate_fields():
-    driver = webdriver.Chrome()
+@pytest.fixture()
+def setup_and_teardown():
+    global driver
+    driver=webdriver.Chrome()
     driver.maximize_window()
     driver.get("https://tutorialsninja.com/demo/")
     time.sleep(2)
+    yield
+    driver.quit()
+
+
+def test_register_with_mandate_fields(setup_and_teardown):
     driver.find_element(By.XPATH, "//span[text()='My Account']").click()
     driver.find_element(By.LINK_TEXT, "Register").click()
     time.sleep(2)
@@ -19,7 +26,7 @@ def test_register_with_mandate_fields():
     driver.find_element(By.LINK_TEXT, "Register").click()
     driver.find_element(By.ID, "input-firstname").send_keys("Arun")
     driver.find_element(By.ID, "input-lastname").send_keys("Lal")
-    driver.find_element(By.ID, "input-email").send_keys("arunlala123@gmail.com")
+    driver.find_element(By.ID, "input-email").send_keys(generate_email_timestamp())
     driver.find_element(By.ID, "input-telephone").send_keys("1234567890")
     driver.find_element(By.ID, "input-password").send_keys("1234546")
     driver.find_element(By.ID, "input-confirm").send_keys("123456")
@@ -34,11 +41,7 @@ def test_register_with_mandate_fields():
 
 # ------------------------------------------------------------------------------------------------
 
-def test_register_with_all_fields():
-    driver = webdriver.Chrome()
-    driver.maximize_window()
-    driver.get("https://tutorialsninja.com/demo/")
-    time.sleep(2)
+def test_register_with_all_fields(setup_and_teardown):
     driver.find_element(By.XPATH, "//span[text()='My Account']").click()
     driver.find_element(By.LINK_TEXT, "Register").click()
     time.sleep(2)
@@ -62,11 +65,7 @@ def test_register_with_all_fields():
 
 
 # ------------------------------------------------------------------------------------------------
-def test_register_with_duplicate_email():
-    driver = webdriver.Chrome()
-    driver.maximize_window()
-    driver.get("https://tutorialsninja.com/demo/")
-    time.sleep(2)
+def test_register_with_duplicate_email(setup_and_teardown):
     driver.find_element(By.XPATH, "//span[text()='My Account']").click()
     driver.find_element(By.LINK_TEXT, "Register").click()
     time.sleep(2)
@@ -90,11 +89,7 @@ def test_register_with_duplicate_email():
 
 
 # ------------------------------------------------------------------------------------------------
-def test_register_without_entering_any_fields():
-    driver = webdriver.Chrome()
-    driver.maximize_window()
-    driver.get("https://tutorialsninja.com/demo/")
-    time.sleep(2)
+def test_register_without_entering_any_fields(setup_and_teardown):
     driver.find_element(By.XPATH, "//span[text()='My Account']").click()
     driver.find_element(By.LINK_TEXT, "Register").click()
     time.sleep(2)
@@ -146,6 +141,6 @@ def test_register_without_entering_any_fields():
     time.sleep(3)
 
     # ------------------------------------------------------------------------------------------------
-    def generate_email_timestamp(self):
-        timestamp = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-        return "arun" + timestamp + "@gmail.com"
+def generate_email_timestamp():
+    timestamp = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+    return "arun" + timestamp + "@gmail.com"
